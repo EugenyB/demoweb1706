@@ -10,20 +10,25 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import javax.sql.DataSource;
+import javax.annotation.Resource;
 
 @WebServlet(name = "helloServlet", value = "/hello-servlet")
 public class HelloServlet extends HttpServlet {
 
+    @Resource(name = "jdbc/chinook")
+    DataSource ds;
     private ArtistDAO artistDAO;
 
     public void init() {
         try {
-            Context ctx = new InitialContext();
-            DataSource ds = (DataSource) ctx.lookup("java:comp/env/jdbc/chinook");
+//            Context ctx = new InitialContext();
+//            DataSource ds = (DataSource) ctx.lookup("java:comp/env/jdbc/chinook");
             Connection connection = ds.getConnection();
             artistDAO = new ArtistDAO(connection);
-        } catch (NamingException | SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
+//        } catch (NamingException e) {
+//            throw new RuntimeException(e);
         }
     }
 
